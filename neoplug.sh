@@ -4,8 +4,9 @@ PLUG_DIR="/home/dogiel/.config/nvim/lua/plugins"
 
 usage() {
     echo "Usage: neoplug <new/list/open/remove/archive/recover> <name>"
-    echo "  -p,  --priority  <int>"
-    echo "  -nl, --no-lazy"
+    echo "new   -p,  --priority  <int>"
+    echo "new   -nl, --no-lazy"
+    echo "list  -a,  --archive"
     [[ -n "$1" ]] && echo "$1"
     exit 2
 }
@@ -61,19 +62,25 @@ if [ $op = "open" ]; then
     else
         echo "Plugin \"$PLUG_NAME\" not found."
         echo "Would you like to create it? (Y/n)"
+        # TODO: Call neoplug new with passthrough
     fi
 fi
 
 if [ $op = "list" ]; then
+    LOCAL_PLUG_DIR=$PLUG_DIR
+    if [ $2 = "-a" -o $2 = "--archive" ]; then
+        LOCAL_PLUG_DIR=$PLUG_DIR/../neoplug_archive
+    fi
+
     i=0
-    for plugin in "$PLUG_DIR"/*
+    for plugin in "$LOCAL_PLUG_DIR"/*
     do
         echo "$i) $(basename $plugin .lua)"
         ((i=i+1))
     done
 fi
 
-if [ $op = "new" ]; then
+if [ $op = "new" -a ! -f "$PLUG_FILE" ]; then
     touch $PLUG_FILE
 
     echo "return {
@@ -91,6 +98,8 @@ if [ $op = "new" ]; then
     }
 }" >> $PLUG_FILE
     nvim $PLUG_FILE
+else
+    usage "Plugin already exists."
 fi
 
 if [ $op = "remove" ]; then

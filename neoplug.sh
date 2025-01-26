@@ -30,6 +30,10 @@ if isntSuffix $PLUG_NAME .lua; then
     PLUG_NAME=$PLUG_NAME.lua
 fi
 
+if [ "$PLUG_NAME" = "" -a $op != "list" ]; then
+    usage "No plugin name provided"
+fi
+
 PLUG_FILE=$PLUG_DIR/$PLUG_NAME
 
 # Check for NO_LAZY flag on 3 and 4 positions
@@ -80,7 +84,10 @@ if [ $op = "list" ]; then
     done
 fi
 
-if [ $op = "new" -a ! -f "$PLUG_FILE" ]; then
+if [ $op = "new" ]; then
+    if test -f "$PLUG_FILE"; then
+        usage "Plugin already exists."
+    fi
     touch $PLUG_FILE
 
     echo "return {
@@ -98,8 +105,6 @@ if [ $op = "new" -a ! -f "$PLUG_FILE" ]; then
     }
 }" >> $PLUG_FILE
     nvim $PLUG_FILE
-else
-    usage "Plugin already exists."
 fi
 
 if [ $op = "remove" ]; then

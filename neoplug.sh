@@ -88,8 +88,9 @@ if [ $op = "new" ]; then
     echo "        config = function()
             -- params
         end,
-    },
+    }
 }" >> $PLUG_FILE
+    nvim $PLUG_FILE
 fi
 
 if [ $op = "remove" ]; then

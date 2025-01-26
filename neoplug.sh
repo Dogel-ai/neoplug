@@ -10,7 +10,7 @@ usage() {
     exit 2
 }
 
-[[ $# -lt 2 ]] && usage "Insufficient arguments (expected 2, got $#)"
+[[ $# -lt 2 && $1 -ne "list" ]] && usage "Insufficient arguments (expected 2, got $#)"
 
 op="$1"
 
@@ -65,7 +65,12 @@ if [ $op = "open" ]; then
 fi
 
 if [ $op = "list" ]; then
-    echo "list"
+    i=0
+    for plugin in "$PLUG_DIR"/*
+    do
+        echo "$i) $(basename $plugin .lua)"
+        ((i=i+1))
+    done
 fi
 
 if [ $op = "new" ]; then

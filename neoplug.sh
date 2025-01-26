@@ -5,7 +5,7 @@ PLUG_DIR="/home/dogiel/.config/nvim/lua/plugins"
 usage() {
     echo "Usage: neoplug <new/list/open/remove/archive/recover> <name>"
     echo "  -p,  --priority  <int>"
-    echo "  -nl, --no-priority"
+    echo "  -nl, --no-lazy"
     [[ -n "$1" ]] && echo "$1"
     exit 2
 }
